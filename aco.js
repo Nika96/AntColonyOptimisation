@@ -27,7 +27,7 @@ class ACO {
   singleAnt() {
     // get starting city 
     // var start = this.getRandomCity();
-    var start = 2;
+    var start = 4;
 
     //update list of visited cities
     var visitedCities = Array();
@@ -44,15 +44,13 @@ class ACO {
     var neighbours = this.unvisitedNeighbours(start, unvisitedCities);
     var pValues = Array();
 
-
     //find value of P(j) for all neighbours of this city
     for(var i=0; i<neighbours.length; i++) {
-      pValues[neighbours[i]] = this.P(start, neighbours[i]+1, neighbours);
-    }    
+      pValues[ neighbours[i] ] = this.P(start, neighbours[i]+1, neighbours);
+    } 
 
-    //0.024960738945990962
-    pValues = [undefined, undefined, undefined, 0.024960738945990962];
-    console.log(this.chooseCity(pValues, 3));
+    let nextCity = this.chooseCity(pValues, start);
+    console.log(nextCity);
     //choose city
     return visitedCities;
   }
@@ -103,11 +101,11 @@ class ACO {
     let q = Math.random();
     
     if( q < this.q0 ) {
-      //wartosc funkcji t(i,j) jest najwieksza
+      // t(i,j) - the biggest value
       let len = city.cityMatrix[cityNumber-1].length;
       let max = 0;
       for(let i=0; i < len; i++) {
-        //jezeli istnieje krawedz
+        //if connection exist
         if( city.cityMatrix[cityNumber-1][i] != 0 ) {
           if( this.t(cityNumber, i+1) > max ) {
             max = this.t(cityNumber, i+1);
@@ -126,17 +124,21 @@ class ACO {
         i++;
       }
 
+      //CASE: city has no neighbours
+      if(t.length == 0) {
+        throw "This city has no neighbours!";
+      }
+
       i = 0;
-      console.log(" f = "+f);
       while( i < t.length ) {
         if( f < pValues[t[i]] ) {
-          console.log("pValues = "+pValues[t[i]]);
-          nextCity = i+1;
+          nextCity = t[i] + 1;
           break;
+        } else if( i == t.length - 1 ) {
+            nextCity = t[ t.length - 1 ];
         }
         pValues[t[i+1]] = pValues[t[i+1]] + pValues[t[i]];
         i++;
-        if( i == t.length - 1 ) nextCity = t[ t.length - 1 ];
       }
     }
     return nextCity;
