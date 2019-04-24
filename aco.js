@@ -31,7 +31,7 @@ class ACO {
 
     //update list of visited cities
     var visitedCities = Array();
-    visitedCities.push( start - 1 );
+    visitedCities.push( start  - 1);
 
     //update list of unvisited cities
     var unvisitedCities = Array();
@@ -41,17 +41,36 @@ class ACO {
       }
     }
 
-    var neighbours = this.unvisitedNeighbours(start, unvisitedCities);
-    var pValues = Array();
+    // let neighbours = this.unvisitedNeighbours(start, unvisitedCities);
+    let pValues = [];
+    let neighbours;
+    let helper = 0;
+    // while( visitedCities.length != city.numberOfCities ) {
+      neighbours = this.unvisitedNeighbours(start, unvisitedCities);
 
-    //find value of P(j) for all neighbours of this city
-    for(var i=0; i<neighbours.length; i++) {
-      pValues[ neighbours[i] ] = this.P(start, neighbours[i]+1, neighbours);
-    } 
+      //find value of P(j) for all neighbours of this city
+      for(let i=0; i<neighbours.length; i++) {
+        pValues[ neighbours[i] ] = this.P(start, neighbours[i]+1, neighbours);
+      } 
 
-    let nextCity = this.chooseCity(pValues, start);
-    console.log(nextCity);
-    //choose city
+      //choose next city to visit
+      let nextCity = this.chooseCity(pValues, start) - 1;
+      //update visited cities
+      visitedCities.push( nextCity );
+      
+      //update unvisited cities
+      unvisitedCities.splice( unvisitedCities.indexOf(nextCity), 1 );
+
+      //update pheromone values on this edge i -> j
+      this.tauLocal(visitedCities[0]+1, visitedCities[1]+1);
+      
+      console.log("PO 1 OBIEGU:  "+visitedCities+" & start = "+start+" next city = "+nextCity);
+      // helper++;
+      start = nextCity;
+      pValues = []; // <<<<<<<<<<<<<<<<<<<<<<<<<<
+      
+            
+    // }
     return visitedCities;
   }
 
@@ -154,6 +173,7 @@ class ACO {
   tauLocal(i ,j) {
     var value = this.ro * this.pheromoneMatrix[i-1][j-1] + this.alfa / (3.4 * 4); 
     this.pheromoneMatrix[i-1][j-1] = value;
+    this.pheromoneMatrix[j-1][i-1] = value;
     return value;
   }
 
