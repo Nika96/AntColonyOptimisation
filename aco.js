@@ -26,8 +26,8 @@ class ACO {
   //single ant method
   singleAnt() {
     // get starting city 
-    // var start = this.getRandomCity();
-    var start = 4;
+    var start = city.getRandomCity();
+    // var start = 4; !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //update list of visited cities
     var visitedCities = Array();
@@ -40,37 +40,32 @@ class ACO {
         unvisitedCities.push( i );
       }
     }
-
+  
     // let neighbours = this.unvisitedNeighbours(start, unvisitedCities);
     let pValues = [];
     let neighbours;
     let helper = 0;
-    // while( visitedCities.length != city.numberOfCities ) {
-      neighbours = this.unvisitedNeighbours(start, unvisitedCities);
-
+    while( visitedCities.length != city.numberOfCities ) {
+      neighbours = city.unvisitedNeighbours(start, unvisitedCities);
       //find value of P(j) for all neighbours of this city
       for(let i=0; i<neighbours.length; i++) {
         pValues[ neighbours[i] ] = this.P(start, neighbours[i]+1, neighbours);
       } 
 
       //choose next city to visit
-      let nextCity = this.chooseCity(pValues, start) - 1;
+      let nextCity = city.chooseCity(pValues, start) - 1;
       //update visited cities
       visitedCities.push( nextCity );
-      
       //update unvisited cities
       unvisitedCities.splice( unvisitedCities.indexOf(nextCity), 1 );
-
       //update pheromone values on this edge i -> j
-      this.tauLocal(visitedCities[0]+1, visitedCities[1]+1);
+      this.tauLocal(visitedCities[helper]+1, visitedCities[helper]+1);
       
-      console.log("PO 1 OBIEGU:  "+visitedCities+" & start = "+start+" next city = "+nextCity);
-      // helper++;
-      start = nextCity;
-      pValues = []; // <<<<<<<<<<<<<<<<<<<<<<<<<<
-      
-            
-    // }
+      helper++;
+      start = nextCity+1;
+      pValues = []; 
+    }      
+    console.log(visitedCities);  
     return visitedCities;
   }
 
@@ -85,7 +80,7 @@ class ACO {
   P( cityStart, cityFinish, unvisitedCities ) {
     var probability;
     
-    var neighbours = this.unvisitedNeighbours( cityStart, unvisitedCities );
+    var neighbours = city.unvisitedNeighbours( cityStart, unvisitedCities );
 
     //sum of t(i, otherCities)
     var sum = 0;
@@ -95,72 +90,6 @@ class ACO {
 
     probability = this.t( cityStart, cityFinish ) / sum;
     return probability;
-  }
-
-  unvisitedNeighbours( cityStart , unvisitedCities) {
-    var neighbours =  Array();
-    for(var i = 0; i< city.cityMatrix.length; i++) {
-      if( city.cityMatrix[ cityStart - 1 ][i] != 0 ) {
-        neighbours.push( i  );
-      }
-    }
-    //cities that are neighbours and are unvisited
-    for(var i = 0; i < neighbours.length; i++ ) {
-      if(unvisitedCities.includes(neighbours[i])) continue;
-      else neighbours.pop(neighbours[i]);
-    }
-    return neighbours;
-  }
-
-  //choose next step city
-  chooseCity( pValues, cityNumber ) {
-    let nextCity;
-    let f = Math.random();
-    //randomizing algorithm - q paramether
-    let q = Math.random();
-    
-    if( q < this.q0 ) {
-      // t(i,j) - the biggest value
-      let len = city.cityMatrix[cityNumber-1].length;
-      let max = 0;
-      for(let i=0; i < len; i++) {
-        //if connection exist
-        if( city.cityMatrix[cityNumber-1][i] != 0 ) {
-          if( this.t(cityNumber, i+1) > max ) {
-            max = this.t(cityNumber, i+1);
-            nextCity = i+1;
-          }
-        }
-      }
-    }
-    else {
-      let t = [];
-      let i = 0;
-      while( i < pValues.length ) {
-        if( pValues[i] != undefined ) {
-          t.push(i);
-        }
-        i++;
-      }
-
-      //CASE: city has no neighbours
-      if(t.length == 0) {
-        throw "This city has no neighbours!";
-      }
-
-      i = 0;
-      while( i < t.length ) {
-        if( f < pValues[t[i]] ) {
-          nextCity = t[i] + 1;
-          break;
-        } else if( i == t.length - 1 ) {
-            nextCity = t[ t.length - 1 ];
-        }
-        pValues[t[i+1]] = pValues[t[i+1]] + pValues[t[i]];
-        i++;
-      }
-    }
-    return nextCity;
   }
 
   //preference function
@@ -186,13 +115,7 @@ class ACO {
       this.pheromoneMatrix[ road[i+1] - 1 ][ road[i]-1 ] = tau;
     }
   }
-
-  //generates random starting city
-  getRandomCity() {
-    return Math.floor(Math.random() * city.numberOfCities) + 1;
-  }
 }
 
 var aco = new ACO( 0.1, 2, 0.3, 0.0000001);
-aco.singleAnt();
-aco.t(2,1);
+aco.aco(10);
