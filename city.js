@@ -99,6 +99,7 @@ class Graph {
 
 var g = new Graph('data.txt');
 
+
 exports.cityMatrix = g.matrix;
 exports.numberOfCities = g.numberOfCities;
 exports.numberOfRoads = g.numberOfRoads;

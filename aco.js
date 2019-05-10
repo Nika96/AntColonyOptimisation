@@ -27,8 +27,7 @@ class ACO {
   singleAnt() {
     // get starting city 
     var start = city.getRandomCity();
-    // var start = 4; !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+    
     //update list of visited cities
     var visitedCities = Array();
     visitedCities.push( start  - 1);
@@ -41,7 +40,6 @@ class ACO {
       }
     }
   
-    // let neighbours = this.unvisitedNeighbours(start, unvisitedCities);
     let pValues = [];
     let neighbours;
     let helper = 0;
@@ -65,14 +63,24 @@ class ACO {
       start = nextCity+1;
       pValues = []; 
     }      
-    console.log(visitedCities);  
+
+    //change tauLocal for last step
+    this.tauLocal( visitedCities[ visitedCities.length - 1] + 1, visitedCities[ 0 ] + 1);
+
+    //last step - get back to the first node
+    visitedCities.push( visitedCities[0] );    
+
     return visitedCities;
   }
 
   //method that calls number of ants that were requested
   aco( numberOfAnts ) {
+    
     for(var i= 0; i<numberOfAnts; i++) {
       console.log(this.singleAnt());
+      // console.log(this.pheromoneMatrix);
+      //if any value repeats -> del: not hamilton cycle
+      
     }
   }
 
@@ -118,4 +126,5 @@ class ACO {
 }
 
 var aco = new ACO( 0.1, 2, 0.3, 0.0000001);
-aco.aco(10);
+// aco.singleAnt();
+aco.aco(5);
