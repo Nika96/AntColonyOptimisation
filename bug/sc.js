@@ -27,11 +27,11 @@ class ACO {
   singleAnt() {
     // get starting city 
     var start = city.getRandomCity();
-    console.log(start);
+    
     //update list of visited cities
     var visitedCities = Array();
     visitedCities.push( start  - 1);
-    
+
     //update list of unvisited cities
     var unvisitedCities = Array();
     for(var i=0; i<city.numberOfCities; i++) {
@@ -39,7 +39,7 @@ class ACO {
         unvisitedCities.push( i );
       }
     }
-    
+  
     var pValues = [];
     var neighbours;
     var helper = 0;
@@ -52,18 +52,17 @@ class ACO {
 
       //choose next city to visit
       var nextCity = city.chooseCity(pValues, start) - 1;
-
       //update visited cities
       visitedCities.push( nextCity );
       //update unvisited cities
       unvisitedCities.splice( unvisitedCities.indexOf(nextCity), 1 );
       //update pheromone values on this edge i -> j
       this.tauLocal(visitedCities[helper]+1, visitedCities[helper]+1);
-
+      
       helper++;
       start = nextCity+1;
       pValues = []; 
-    }
+    }      
 
     //change tauLocal for last step
     this.tauLocal( visitedCities[ visitedCities.length - 1] + 1, visitedCities[ 0 ] + 1);
@@ -79,32 +78,33 @@ class ACO {
 
     //for each ant check length of her road
     var roadLenght = 0;
+    var minRoad = [], result = [];
     var  min = 10000;
-    var minRoad = []; 
     for(var i = 0; i<numberOfAnts; i++) {
-           
-      var arr = this.singleAnt();
       
+      var arr = this.singleAnt();
+      console.log(arr);
       roadLenght = 0;
 
       for(var j = 0; j < city.numberOfCities; j++ ) {
         roadLenght = roadLenght + city.cityMatrix[arr[j]][arr[j+1]];
       }
-
       //rounding result to the third place after coma
       roadLenght = parseFloat(roadLenght.toFixed(3));
-           
-      // console.log(arr.slice(1, arr.length - 1));
+      
+
       //checking if this road is the shortest
-      if( city.hasDuplicates( arr.slice(0, arr.length - 1) ) === false  ) {
-        if( roadLenght < min ) {
-          min = roadLenght;
-          minRoad = arr;
-        }
+      if( parseFloat(roadLenght) < min ) {
+        min = roadLenght;
+        minRoad = arr;
       }
-      else console.log("Hamilton cycle was not reached.");
     }
-    return minRoad;
+    // console.log(minRoad);
+    // this.tauGlobal(minRoad[0] + 1, minRoad[minRoad.length-1] + 1);
+    // console.log(minRoad[0] + 1)
+    // console.log(minRoad[minRoad.length-1] + 1)
+    // console.log(min);
+    // console.log(minRoad);
   }
 
   //P(j) for single city
@@ -148,5 +148,6 @@ class ACO {
   }
 }
 
-var aco = new ACO( 0.1, 2, 0.1, 0);
-
+var aco = new ACO( 0.1, 2, 0.3, 0.0001);
+console.log(aco.singleAnt() );
+// aco.aco( 5 );

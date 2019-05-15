@@ -7,7 +7,11 @@ class Graph {
         var splitted = text.toString().split("\n");
         
         this.numberOfCities = splitted[0];
-            this.numberOfRoads = splitted[1];
+        this.numberOfRoads = splitted[1];
+        //if there is only one city
+        if( this.numberOfRoads == 0 ) {
+            throw "There is only one city number: "+splitted[2]+".";
+        }
         this.matrix = Array( parseInt(this.numberOfCities) ).fill(0).map(x => Array( parseInt(this.numberOfCities) ).fill(0));
 
         var first=0, second =0, third=0;
@@ -37,40 +41,40 @@ class Graph {
         let len = city.cityMatrix[cityNumber-1].length;
         let max = 0;
         for(let i=0; i < len; i++) {
-        //if connection exist
-        if( city.cityMatrix[cityNumber-1][i] != 0 ) {
-            if( this.t(cityNumber, i+1) > max ) {
-            max = this.t(cityNumber, i+1);
-            nextCity = i+1;
+            //if connection exist
+            if( city.cityMatrix[cityNumber-1][i] != 0 ) {
+                if( this.t(cityNumber, i+1) > max ) {
+                max = this.t(cityNumber, i+1);
+                nextCity = i+1;
+                }
             }
-        }
         }
     }
     else {
         let t = [];
         let i = 0;
         while( i < pValues.length ) {
-        if( pValues[i] != undefined ) {
-            t.push(i);
-        }
-        i++;
+            if( pValues[i] != undefined ) {
+                t.push(i);
+            }
+            i++;
         }
 
         //CASE: city has no neighbours
         if(t.length == 0) {
-        throw "This city has no neighbours!";
+            throw "This city has no neighbours!";
         }
 
         i = 0;
         while( i < t.length ) {
-        if( f < pValues[t[i]] ) {
-            nextCity = t[i] + 1;
-            break;
-        } else if( i == t.length - 1 ) {
-            nextCity = t[ t.length - 1 ];
-        }
-        pValues[t[i+1]] = pValues[t[i+1]] + pValues[t[i]];
-        i++;
+            if( f < pValues[t[i]] ) {
+                nextCity = t[i] + 1;
+                break;
+            } else if( i == t.length - 1 ) {
+                nextCity = t[ t.length - 1 ];
+            }
+            pValues[t[i+1]] = pValues[t[i+1]] + pValues[t[i]];
+            i++;
         }
     }
     return nextCity;
@@ -89,10 +93,12 @@ class Graph {
         for(var i = 0; i < neighbours.length; i++ ) {
             if(unvisitedCities.includes(neighbours[i])) continue;
             else neighbours.splice( neighbours.indexOf(neighbours[i]), 1 );
-            
         }
-
         return neighbours;
+    }
+
+    hasDuplicates( array ) {
+        return (new Set(array)).size !== array.length;
     }
 
 }
@@ -106,3 +112,4 @@ exports.numberOfRoads = g.numberOfRoads;
 exports.chooseCity = g.chooseCity;
 exports.getRandomCity = g.getRandomCity;
 exports.unvisitedNeighbours = g.unvisitedNeighbours;
+exports.hasDuplicates = g.hasDuplicates;
