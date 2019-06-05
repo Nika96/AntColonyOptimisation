@@ -27,7 +27,6 @@ class ACO {
   singleAnt() {
     // get starting city 
     var start = city.getRandomCity();
-    console.log(start);
     //update list of visited cities
     var visitedCities = Array();
     visitedCities.push( start  - 1);
@@ -94,16 +93,13 @@ class ACO {
       //rounding result to the third place after coma
       roadLenght = parseFloat(roadLenght.toFixed(3));
            
-      // console.log(arr.slice(1, arr.length - 1));
       //checking if this road is the shortest
-      if( city.hasDuplicates( arr.slice(0, arr.length - 1) ) === false  ) {
-        if( roadLenght < min ) {
-          min = roadLenght;
-          minRoad = arr;
-        }
+      if( roadLenght < min ) {
+        min = roadLenght;
+        minRoad = arr;
       }
-      else console.log("Hamilton cycle was not reached.");
     }
+    this.tauGlobal(minRoad);
     return minRoad;
   }
 
@@ -149,4 +145,6 @@ class ACO {
 }
 
 var aco = new ACO( 0.1, 2, 0.1, 0);
+aco.aco( 10 );
 
+//ilosc mrowek, tauGlobal tauLocal i jak sie to zmienia w zal od ilosci mrowek dla tego samego grafi

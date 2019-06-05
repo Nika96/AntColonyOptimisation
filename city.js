@@ -26,58 +26,58 @@ class Graph {
     
     //generates random starting city
     getRandomCity() {
-    return Math.floor(Math.random() * this.numberOfCities) + 1;
+        return Math.floor(Math.random() * this.numberOfCities) + 1;
     }
 
     //choose next step city
     chooseCity( pValues, cityNumber ) {
-    let nextCity;
-    let f = Math.random();
-    //randomizing algorithm - q paramether
-    let q = Math.random();
+        let nextCity;
+        let f = Math.random();
+        //randomizing algorithm - q paramether
+        let q = Math.random();
 
-    if( q < this.q0 ) {
-        // t(i,j) - the biggest value
-        let len = city.cityMatrix[cityNumber-1].length;
-        let max = 0;
-        for(let i=0; i < len; i++) {
-            //if connection exist
-            if( city.cityMatrix[cityNumber-1][i] != 0 ) {
-                if( this.t(cityNumber, i+1) > max ) {
-                max = this.t(cityNumber, i+1);
-                nextCity = i+1;
+        if( q < this.q0 ) {
+            // t(i,j) - the biggest value
+            let len = city.cityMatrix[cityNumber-1].length;
+            let max = 0;
+            for(let i=0; i < len; i++) {
+                //if connection exist
+                if( city.cityMatrix[cityNumber-1][i] != 0 ) {
+                    if( this.t(cityNumber, i+1) > max ) {
+                    max = this.t(cityNumber, i+1);
+                    nextCity = i+1;
+                    }
                 }
             }
         }
-    }
-    else {
-        let t = [];
-        let i = 0;
-        while( i < pValues.length ) {
-            if( pValues[i] != undefined ) {
-                t.push(i);
+        else {
+            let t = [];
+            let i = 0;
+            while( i < pValues.length ) {
+                if( pValues[i] != undefined ) {
+                    t.push(i);
+                }
+                i++;
             }
-            i++;
-        }
 
-        //CASE: city has no neighbours
-        if(t.length == 0) {
-            throw "This city has no neighbours!";
-        }
-
-        i = 0;
-        while( i < t.length ) {
-            if( f < pValues[t[i]] ) {
-                nextCity = t[i] + 1;
-                break;
-            } else if( i == t.length - 1 ) {
-                nextCity = t[ t.length - 1 ];
+            //CASE: city has no neighbours
+            if(t.length == 0) {
+                throw "This city has no neighbours!";
             }
-            pValues[t[i+1]] = pValues[t[i+1]] + pValues[t[i]];
-            i++;
+
+            i = 0;
+            while( i < t.length ) {
+                if( f < pValues[t[i]] ) {
+                    nextCity = t[i] + 1;
+                    break;
+                } else if( i == t.length - 1 ) {
+                    nextCity = t[ t.length - 1 ];
+                }
+                pValues[t[i+1]] = pValues[t[i+1]] + pValues[t[i]];
+                i++;
+            }
         }
-    }
-    return nextCity;
+        return nextCity;
     }
 
     //returns array of unvisited neighbours
