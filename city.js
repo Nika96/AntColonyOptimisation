@@ -79,28 +79,6 @@ class Graph {
         }
         return nextCity;
     }
-
-    //returns array of unvisited neighbours
-    unvisitedNeighbours( cityStart , unvisitedCities) {
-        var neighbours =  Array();
-        for(var i = 0; i< this.cityMatrix.length; i++) {
-            if( this.cityMatrix[ cityStart - 1 ][i] != 0 ) {
-            neighbours.push( i  );
-            }
-        }
-
-        //cities that are neighbours and are unvisited
-        for(var i = 0; i < neighbours.length; i++ ) {
-            if(unvisitedCities.includes(neighbours[i])) continue;
-            else neighbours.splice( neighbours.indexOf(neighbours[i]), 1 );
-        }
-        return neighbours;
-    }
-
-    hasDuplicates( array ) {
-        return (new Set(array)).size !== array.length;
-    }
-
 }
 
 var g = new Graph('data.txt');
@@ -111,5 +89,3 @@ exports.numberOfCities = g.numberOfCities;
 exports.numberOfRoads = g.numberOfRoads;
 exports.chooseCity = g.chooseCity;
 exports.getRandomCity = g.getRandomCity;
-exports.unvisitedNeighbours = g.unvisitedNeighbours;
-exports.hasDuplicates = g.hasDuplicates;

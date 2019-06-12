@@ -43,7 +43,7 @@ class ACO {
     var neighbours;
     var helper = 0;
     while( visitedCities.length != city.numberOfCities ) {
-      neighbours = city.unvisitedNeighbours(start, unvisitedCities);
+      neighbours = unvisitedCities;
       //find value of P(j) for all neighbours of this city
       for(var i=0; i<neighbours.length; i++) {
         pValues[ neighbours[i] ] = this.P(start, neighbours[i]+1, neighbours);
@@ -99,7 +99,6 @@ class ACO {
         minRoad = arr;
       }
     }
-    this.tauGlobal(minRoad);
     return minRoad;
   }
 
@@ -107,7 +106,7 @@ class ACO {
   P( cityStart, cityFinish, unvisitedCities ) {
     var probability;
     
-    var neighbours = city.unvisitedNeighbours( cityStart, unvisitedCities );
+    var neighbours = unvisitedCities;
 
     //sum of t(i, otherCities)
     var sum = 0;
@@ -145,6 +144,4 @@ class ACO {
 }
 
 var aco = new ACO( 0.1, 2, 0.1, 0);
-aco.aco( 10 );
-
-//ilosc mrowek, tauGlobal tauLocal i jak sie to zmienia w zal od ilosci mrowek dla tego samego grafi
+console.log(aco.aco( 10 ));
